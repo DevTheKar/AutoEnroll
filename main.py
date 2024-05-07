@@ -4,39 +4,48 @@ from selenium.webdriver.common.by import By
 import time
 
 
+def display_text():
+    text_viewer = webdriver.Chrome()
+    text_viewer.get("https://large-type.com/#")
+    time.sleep(2)
+    text_elem = text_viewer.find_element(By.CLASS_NAME, "inputbox")
+    text_elem.clear()
+    text_elem.send_keys(value.text)
+    time.sleep(30)
+    text_viewer.close()
+    
 
-driver = webdriver.Chrome()
+oasis = webdriver.Chrome()
 
 
-driver.get("https://my.usf.edu/myusf/home_myusf/index")
+oasis.get("https://my.usf.edu/myusf/home_myusf/index")
 time.sleep(5)
 
 
-elem = driver.find_element(By.ID, "i0116")
+elem = oasis.find_element(By.ID, "i0116")
 elem.send_keys("devthakkar@usf.edu")
 time.sleep(5)
 
-next_button = driver.find_element(By.ID, "idSIButton9")
+next_button = oasis.find_element(By.ID, "idSIButton9")
 next_button.click()
 time.sleep(5)
 
-elem = driver.find_element(By.ID, "i0118")
+elem = oasis.find_element(By.ID, "i0118")
 elem.send_keys("Dnrnt*5475%$&%")
 time.sleep(5)
 
-sign_in_button = driver.find_element(By.ID, "idSIButton9")
+sign_in_button = oasis.find_element(By.ID, "idSIButton9")
 sign_in_button.click()
 time.sleep(5)
 
-value = driver.find_element(By.ID, "idRichContext_DisplaySign")
-print(value.text)
-time.sleep(30)
+value = oasis.find_element(By.ID, "idRichContext_DisplaySign")
+display_text()
 
-yes_button = driver.find_element(By.ID, "idSIButton9")
+yes_button = oasis.find_element(By.ID, "idSIButton9")
 yes_button.click()
 time.sleep(5)
 
-links = driver.find_elements(By.CLASS_NAME, "kgo-publish-tile-action")
+links = oasis.find_elements(By.CLASS_NAME, "kgo-publish-tile-action")
 
 # Iterate through the links
 for link in links:
@@ -47,4 +56,4 @@ for link in links:
         break
 time.sleep(20)
 
-driver.close()
+oasis.close()
