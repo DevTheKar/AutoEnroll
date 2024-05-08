@@ -4,7 +4,7 @@ AutoEnroll is a Python script that automates the process of signing up for cours
 
 ## Usage
 
-1. **Download:** Clone or download the script from [devthekar.github.io](https://devthekar.github.io/AutoEnroll.py).
+1. **Download:** Clone or download the script from [devthekar.github.io](https://devthekar.github.io/).
 
 2. **Dependencies:** Make sure you have Python installed on your system. Additionally, you'll need to install Selenium and the appropriate WebDriver for your chosen browser (e.g., Chrome WebDriver).
 
