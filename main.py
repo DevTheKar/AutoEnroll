@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time
 
 
@@ -22,38 +24,40 @@ oasis.get("https://my.usf.edu/myusf/home_myusf/index")
 time.sleep(5)
 
 
-elem = oasis.find_element(By.ID, "i0116")
-elem.send_keys("devthakkar@usf.edu")
+oasis.find_element(By.ID, "i0116").send_keys("devthakkar@usf.edu") # Email
 time.sleep(5)
 
-next_button = oasis.find_element(By.ID, "idSIButton9")
-next_button.click()
+oasis.find_element(By.ID, "idSIButton9").click() #Next Button
 time.sleep(5)
 
-elem = oasis.find_element(By.ID, "i0118")
-elem.send_keys("Dnrnt*5475%$&%")
+oasis.find_element(By.ID, "i0118").send_keys("Dnrnt*5475%$&%") # Password
 time.sleep(5)
 
-sign_in_button = oasis.find_element(By.ID, "idSIButton9")
-sign_in_button.click()
+oasis.find_element(By.ID, "idSIButton9").click() # Sign In button
 time.sleep(5)
 
 value = oasis.find_element(By.ID, "idRichContext_DisplaySign")
 display_text()
 
-yes_button = oasis.find_element(By.ID, "idSIButton9")
-yes_button.click()
+oasis.find_element(By.ID, "idSIButton9").click() #Yes Button to Do you want to reduce sign in
 time.sleep(5)
 
 links = oasis.find_elements(By.CLASS_NAME, "kgo-publish-tile-action")
 
-# Iterate through the links
 for link in links:
-    # Check if the link's href attribute matches the desired URL
     if link.get_attribute("href") == "https://bannersso.usf.edu/ssomanager/c/SSB":
-        # Click the link
         link.click()
-        break
-time.sleep(20)
+        break    
+time.sleep(15)
 
+handles = oasis.window_handles
+oasis.switch_to.window(handles[1])
+oasis.find_element(By.LINK_TEXT, "Student").click() # Student Button
+time.sleep(1.5)
+oasis.find_element(By.LINK_TEXT, "Registration").click() # Student Button
+time.sleep(1.5)
+oasis.find_element(By.LINK_TEXT, "Class Schedule Search").click() # Student Button
+time.sleep(1.5)
+
+time.sleep(5)
 oasis.close()
