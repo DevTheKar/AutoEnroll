@@ -8,7 +8,31 @@ AutoEnroll is a Python script that automates the process of signing up for cours
 
 2. **Dependencies:** Make sure you have Python installed on your system. Additionally, you'll need to install Selenium and the appropriate WebDriver for your chosen browser (e.g., Chrome WebDriver).
 
-3. **Configuration:** Edit the script to include your university's course enrollment page URL and any necessary login credentials.
+3. **Configuration:** Before running the script, ensure you've correctly configured the `data.txt` file with the following details:
+
+   ```plaintext
+   # AutoEnroll Configuration
+
+   This file contains the necessary information for the AutoEnroll script to work properly. Please make sure to fill in the following details:
+
+   1. Your email address: [Your Email]
+   2. Your password: [Your Password]
+   3. Semester code: 
+      - For Fall 2024, use: 202408
+      - For Summer 2024, use: 202405
+      - For Spring 2024, use: 202401
+      - and so on...
+   4. Course name (including spaces): [Course Name]
+   5. Course CRN (Course Reference Number): [Course CRN]
+
+   Example:
+   1. johndoe@example.com
+   2. mypassword123
+   3. 202408
+   4. Communication for Engineers
+   5. 54154
+
+   Please ensure each detail is correctly entered on its own line in the 'data.txt' file.
 
 4. **Run the Script:** Open a terminal or command prompt, navigate to the directory containing the script, and run it using Python:
 
