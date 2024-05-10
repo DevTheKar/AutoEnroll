@@ -49,7 +49,3 @@ Please use this script responsibly and in accordance with your university's poli
 ## Contributions
 
 Contributions and suggestions are welcome! Feel free to submit a pull request or open an issue on GitHub if you have any ideas for improvements or new features.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
