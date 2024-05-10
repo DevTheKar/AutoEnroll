@@ -6,12 +6,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 import time
 
-with open('data.txt', 'r') as file:
-    lines = [line.strip() for line in file]
-
-
 def display_text():
     text_viewer = webdriver.Chrome()
+    text_viewer.maximize_window()
     text_viewer.get("https://large-type.com/#")
     text_viewer.maximize_window()
     text_elem = WebDriverWait(text_viewer, 60).until(EC.presence_of_element_located((By.CLASS_NAME, "inputbox"))) # Input Text Box
@@ -21,6 +18,19 @@ def display_text():
     text_viewer.close()
     
 
+user_input = webdriver.Chrome()
+user_input.maximize_window()
+user_input.get("https://devthekar.github.io/AutoEnrollFrontend/")
+while True:
+    email = WebDriverWait(user_input, 1000).until(EC.presence_of_element_located((By.CLASS_NAME, "email"))).text # User email
+    password = user_input.find_element(By.CLASS_NAME, "password").text
+    semester = user_input.find_element(By.CLASS_NAME, "semester").get_attribute("value")
+    course_name = user_input.find_element(By.CLASS_NAME, "coursename").text
+    crn = user_input.find_element(By.CLASS_NAME, "crnnumber").text
+    break
+time.sleep(3)
+user_input.close()
+
 chrome_options = Options()
 chrome_options.add_argument("--headless")
 oasis = webdriver.Chrome(options=chrome_options)
@@ -29,11 +39,11 @@ oasis = webdriver.Chrome(options=chrome_options)
 oasis.get("https://my.usf.edu/myusf/home_myusf/index")
 time.sleep(5)
 
-WebDriverWait(oasis, 60).until(EC.presence_of_element_located((By.ID, "i0116"))).send_keys(lines[0]) # Email
+WebDriverWait(oasis, 60).until(EC.presence_of_element_located((By.ID, "i0116"))).send_keys(email) # Email
 oasis.find_element(By.ID, "idSIButton9").click() #Next Button
 
 time.sleep(1)
-WebDriverWait(oasis, 60).until(EC.presence_of_element_located((By.ID, "i0118"))).send_keys(lines[1]) # Password
+WebDriverWait(oasis, 60).until(EC.presence_of_element_located((By.ID, "i0118"))).send_keys(password) # Password
 oasis.find_element(By.ID, "idSIButton9").click() # Sign In button
 time.sleep(2)
 
@@ -61,11 +71,11 @@ WebDriverWait(oasis, 60).until(EC.presence_of_element_located((By.LINK_TEXT, "Cl
 
 dropdown = WebDriverWait(oasis, 60).until(EC.presence_of_element_located((By.NAME, "p_term")))# Class Schedule Search Button
 select = Select(dropdown)
-select.select_by_value(lines[2]) # Semester
+select.select_by_value(semester) # Semester
 oasis.find_element(By.XPATH, "//input[@type='submit' and @value='Submit']").click()
 
 
-WebDriverWait(oasis, 60).until(EC.presence_of_element_located((By.NAME, "sel_title"))).send_keys(lines[3]) # Class name
+WebDriverWait(oasis, 60).until(EC.presence_of_element_located((By.NAME, "sel_title"))).send_keys(course_name) # Class name
 oasis.find_element(By.NAME, "open_only").click()
 time.sleep(2)
 oasis.find_element(By.NAME, "SUB_BTN").click() #Submit search
@@ -80,7 +90,7 @@ while True:
     seats_counter = 13
     for data in table_data:
         if count == crn_counter:
-            if data.text == lines[4]:
+            if data.text == crn:
                 crn_counter += 20
             else:
                 continue
@@ -100,7 +110,7 @@ while True:
 
 courses = oasis.find_elements(By.NAME, "sel_crn")
 for course in courses:
-    if course.get_attribute("value") == f"{lines[4]} {lines[2]}":
+    if course.get_attribute("value") == f"{crn} {semester}":
         course.click()
 time.sleep(1)
 
