@@ -24,7 +24,7 @@ def display_text(value):
     text_elem = WebDriverWait(text_viewer, 60).until(EC.presence_of_element_located((By.CLASS_NAME, "inputbox"))) # Input Text Box
     text_elem.clear()
     text_elem.send_keys(value)
-    time.sleep(20)
+    WebDriverWait(oasis, 60).until(EC.visibility_of_element_located((By.ID, "idSIButton9")))
     text_viewer.close()
 
 def navigate_to_oasis(email, password):
@@ -50,7 +50,7 @@ def find_and_register_class(oasis, semester, course_name, crn):
     handles = oasis.window_handles
     oasis.switch_to.window(handles[1])
 
-    WebDriverWait(oasis, 60).until(EC.presence_of_element_located((By.LINK_TEXT, "Student"))).click() # Student Button
+    WebDriverWait(oasis, 600).until(EC.presence_of_element_located((By.LINK_TEXT, "Student"))).click() # Student Button
     WebDriverWait(oasis, 60).until(EC.presence_of_element_located((By.LINK_TEXT, "Registration"))).click() # Registration Button
     WebDriverWait(oasis, 60).until(EC.presence_of_element_located((By.LINK_TEXT, "Class Schedule Search"))).click() # Class Schedule Search Button
 
