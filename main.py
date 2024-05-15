@@ -3,12 +3,17 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select, WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import NoSuchElementException
 import time
 
+urls = ["https://devthekar.github.io/AutoEnrollFrontend/", "https://devthekar.github.io/AutoEnrollFrontend/incorrectemail", "https://devthekar.github.io/AutoEnrollFrontend/incorrectpassword"]
+counter = 0
+
 def login_to_application():
+    global urls, counter
     user_input = webdriver.Chrome()
     user_input.maximize_window()
-    user_input.get("https://devthekar.github.io/AutoEnrollFrontend/")
+    user_input.get(urls[counter])
     email = WebDriverWait(user_input, 1000).until(EC.presence_of_element_located((By.CLASS_NAME, "email"))).text # User email
     password = user_input.find_element(By.CLASS_NAME, "password").text
     semester = user_input.find_element(By.CLASS_NAME, "semester").get_attribute("value")
@@ -16,6 +21,8 @@ def login_to_application():
     crn = user_input.find_element(By.CLASS_NAME, "crnnumber").text
     user_input.close()
     return email, password, semester, course_name, crn
+
+
 
 def display_text(value):
     text_viewer = webdriver.Chrome()
@@ -27,18 +34,39 @@ def display_text(value):
     WebDriverWait(oasis, 60).until(EC.visibility_of_element_located((By.ID, "idSIButton9")))
     text_viewer.close()
 
+
+
 def navigate_to_oasis(email, password):
     chrome_options = Options()
     chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--log-level=3")
     oasis = webdriver.Chrome(options=chrome_options)
     oasis.get("https://my.usf.edu/myusf/home_myusf/index")
     WebDriverWait(oasis, 60).until(EC.presence_of_element_located((By.ID, "i0116"))).send_keys(email) # Email
     oasis.find_element(By.ID, "idSIButton9").click() #Next Button
     time.sleep(1)
-    WebDriverWait(oasis, 60).until(EC.presence_of_element_located((By.ID, "i0118"))).send_keys(password) # Password
-    oasis.find_element(By.ID, "idSIButton9").click() # Sign In button
-    time.sleep(2)
-    return oasis
+    global counter
+    
+    # Check if there's an error message for incorrect username
+    try:
+        error_message = oasis.find_element(By.ID, "usernameError")
+        counter = 1
+        oasis.quit()  # Close the browser
+        return None
+    except NoSuchElementException:
+        WebDriverWait(oasis, 60).until(EC.presence_of_element_located((By.ID, "i0118"))).send_keys(password) # Password
+        oasis.find_element(By.ID, "idSIButton9").click() # Sign In button
+        
+        # Check if there's an error message for incorrect password
+        try:
+            error_message = oasis.find_element(By.ID, "passwordError")
+            counter = 2
+            oasis.quit()  # Close the browser
+            return None
+        except NoSuchElementException:
+            time.sleep(2)
+            return oasis
+
 
 def find_and_register_class(oasis, semester, course_name, crn):
     links = WebDriverWait(oasis, 60).until(EC.presence_of_all_elements_located((By.CLASS_NAME, "kgo-publish-tile-action"))) # Pressing OASIS
@@ -105,10 +133,17 @@ def find_and_register_class(oasis, semester, course_name, crn):
     time.sleep(3)
     oasis.close()
 
+
+
 if __name__ == "__main__":
-    email, password, semester, course_name, crn = login_to_application()
-    oasis = navigate_to_oasis(email, password)
-    value = WebDriverWait(oasis, 60).until(EC.presence_of_element_located((By.ID, "idRichContext_DisplaySign"))) # 2FA Code
-    display_text(value.text)
-    oasis.find_element(By.ID, "idSIButton9").click() #Yes Button to Do you want to reduce sign in
-    find_and_register_class(oasis, semester, course_name, crn)
+    while True:
+        email, password, semester, course_name, crn = login_to_application()
+        oasis = navigate_to_oasis(email, password)
+        if oasis is not None:
+            value = WebDriverWait(oasis, 60).until(EC.presence_of_element_located((By.ID, "idRichContext_DisplaySign"))) # 2FA Code
+            display_text(value.text)
+            oasis.find_element(By.ID, "idSIButton9").click() #Yes Button to Do you want to reduce sign in
+            find_and_register_class(oasis, semester, course_name, crn)
+            break
+        else:
+            continue
