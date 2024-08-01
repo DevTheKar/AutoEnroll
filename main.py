@@ -23,7 +23,6 @@ def login_to_application():
     return email, password, semester, course_name, crn
 
 
-
 def display_text(value):
     text_viewer = webdriver.Chrome()
     text_viewer.maximize_window()
